@@ -1,0 +1,5 @@
+{
+  "DB": {
+    "mongoConnectURL" : "mongodb://123.456.789.000:27017/db"
+  }
+}
