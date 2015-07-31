@@ -5,8 +5,8 @@ var fs = require("fs")
 
 
 
-var fileIn = '/Volumes/Untitled/classify_1_results.json'
-var fileOut = '/Users/matt/Downloads/update_1.json'
+var fileIn = '/Volumes/Untitled/classify_5_results.json'
+var fileOut = '/Users/matt/Downloads/update_5.json'
 
 
 
@@ -27,6 +27,13 @@ file.streamFile(fileIn,function(record,resume){
 	process.stdout.clearLine()
 	process.stdout.cursorTo(0)
 	process.stdout.write( counter + "" )
+
+
+	if (record === null){
+		rs.push(null)
+		return false
+	}
+
 
 
 	classifyDecode.returnData(record,function(results){
