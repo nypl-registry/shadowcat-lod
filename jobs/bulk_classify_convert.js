@@ -5,8 +5,8 @@ var fs = require("fs")
 
 
 
-var fileIn = '/Volumes/Untitled/classify_5_results.json'
-var fileOut = '/Users/matt/Downloads/update_5.json'
+var fileIn = '/Volumes/Untitled/classify_13_results.json'
+var fileOut = '/Users/matt/Downloads/update_13.json'
 
 
 
