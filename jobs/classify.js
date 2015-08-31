@@ -77,15 +77,17 @@ if (cluster.isMaster) {
 		}, function(error){
 
 
-			//console.log("done Updating, there are", Object.keys(dataStore).length, " records left in the queue to work")
+			console.log("done Updating, there are", Object.keys(dataStore).length, " records left in the queue to work")
 
 			//keep 50 in the queue
 			if (Object.keys(dataStore).length < 300){
 
+				console.log("Asking for more records")
+
 				//this can happen async
 				db.returnNextApiClassifyWork(function(err,doc){
 
-					if (err) log.info(err)
+					if (err) console.log(err)
 
 					for (var x in doc){
 						if (!dataStore[doc[x]._id]){
@@ -94,6 +96,8 @@ if (cluster.isMaster) {
 							dataStore[doc[x]._id].complete = false
 						}
 					}
+
+					console.log("there are", Object.keys(dataStore).length, " now in the queue to work")
 
 				})
 
