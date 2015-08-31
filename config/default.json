@@ -5,5 +5,7 @@
     "mongoPort" : 27017,
     "mongoDb" : "db"
 
-  }
+  },
+
+  "ClassifyWorkerCount" : 10
 }
