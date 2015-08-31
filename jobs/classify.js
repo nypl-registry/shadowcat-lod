@@ -36,34 +36,36 @@ if (cluster.isMaster) {
 
 		async.eachSeries(dataStore, function(data, callback){
 
+			if (data){
+				if (data.complete && data.update){
 
-			if (data.complete && data.update){
-
-				db.updateBibRecord(data.update,function(err,results){
-
-					if (err) console.log("ERR",err)
-					//we want to remove this one from the apiClassify collection
-					db.deleteApiClassifyWork(data.update.id,function(err,results){
+					db.updateBibRecord(data.update,function(err,results){
 
 						if (err) console.log("ERR",err)
+						//we want to remove this one from the apiClassify collection
+						db.deleteApiClassifyWork(data.update.id,function(err,results){
 
-						//and delete it from the local data store
-						delete dataStore[data.update.id]
+							if (err) console.log("ERR",err)
 
-						callback()
+							//and delete it from the local data store
+							delete dataStore[data.update.id]
+
+							callback()
+
+						})
+
+						
 
 					})
 
-					
-
-				})
 
 
 
+				}else{
 
-			}else{
+					callback()
 
-				callback()
+				}
 
 			}
 
@@ -78,7 +80,7 @@ if (cluster.isMaster) {
 			//console.log("done Updating, there are", Object.keys(dataStore).length, " records left in the queue to work")
 
 			//keep 50 in the queue
-			if (Object.keys(dataStore).length < 200){
+			if (Object.keys(dataStore).length < 300){
 
 				//this can happen async
 				db.returnNextApiClassifyWork(function(err,doc){
