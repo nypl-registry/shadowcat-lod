@@ -80,7 +80,7 @@ if (cluster.isMaster) {
 			console.log("done Updating, there are", Object.keys(dataStore).length, " records left in the queue to work")
 
 			//keep 50 in the queue
-			if (Object.keys(dataStore).length < 300){
+			if (Object.keys(dataStore).length < 500){
 
 				console.log("Asking for more records")
 
@@ -258,7 +258,7 @@ if (cluster.isMaster) {
 							dataStore[msg.req.record._id].update = update
 
 							if (update['classify:owi']){
-								workers[worker.id].lastTask = 'I matched <a href="http://catalog.nypl.org/record=' + results.bnumber +'">b'+ results.bnumber  +'</a>' + ' to <a http://classify.oclc.org/classify2/ClassifyDemo?owi=' + update['classify:owi'] +'">owi:'+ update['classify:owi']  +'</a>'
+								workers[worker.id].lastTask = 'I matched <a href="http://catalog.nypl.org/record=' + results.bnumber +'">b'+ results.bnumber  +'</a>' + ' to <a href="http://classify.oclc.org/classify2/ClassifyDemo?owi=' + update['classify:owi'] +'">owi:'+ update['classify:owi']  +'</a>'
 							}else{
 								workers[worker.id].lastTask = 'I was not able to match <a href="http://catalog.nypl.org/record=' + results.bnumber +'">b'+ results.bnumber  +'</a> :('
 							}
