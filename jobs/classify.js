@@ -339,7 +339,7 @@ if (cluster.isMaster) {
 	var finished = false
 	var results = []
 
-	var debug = false
+	var debug = true
 	
 
 
