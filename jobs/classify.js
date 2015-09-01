@@ -38,15 +38,17 @@ if (cluster.isMaster) {
 
 		updatingRecordsInMongo = true
 
+		var updateStartTime = (new Date).getTime()
+
 		console.log("starting record update")
 
 
-		db.updateClassifyData(dataStore, function(err,results){
+		db.updateClassifyData(dataStore, updateStartTime, function(err,results){
 
 
 			//remove the completed records that are now updated in mongo
 			for (var x in dataStore){
-				if (dataStore[x].complete) delete dataStore[x]
+				if (dataStore[x].complete && dataStore[x].completeTime < updateStartTime) delete dataStore[x]
 			}
 
 			updatingRecordsInMongo = false
@@ -239,6 +241,8 @@ if (cluster.isMaster) {
 							}
 
 							dataStore[msg.req.record._id].complete = true
+
+							dataStore[msg.req.record._id].completeTime = (new Date).getTime()
 
 							for (var x in dataStore){
 								if (!dataStore[x].working && !dataStore[x].working.complete){
