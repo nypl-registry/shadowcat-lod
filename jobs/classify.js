@@ -137,6 +137,8 @@ if (cluster.isMaster) {
 
 				workers[worker.id].name = Moniker.choose()
 				workers[worker.id].totalRequests = 0
+				workers[worker.id].totalSucessfulMatches = 0
+				workers[worker.id].totalFailedMatches = 0
 				workers[worker.id].totalBytes = 0
 				workers[worker.id].quest = "OCLC Classify work"
 				workers[worker.id].lastTask = ""
@@ -235,8 +237,10 @@ if (cluster.isMaster) {
 							dataStore[msg.req.record._id].update = update
 
 							if (update['classify:owi']){
+								workers[worker.id].totalSucessfulMatches++
 								workers[worker.id].lastTask = 'I matched <a href="http://catalog.nypl.org/record=' + results.bnumber +'">b'+ results.bnumber  +'</a>' + ' to <a href="http://classify.oclc.org/classify2/ClassifyDemo?owi=' + update['classify:owi'] +'">owi:'+ update['classify:owi']  +'</a>'
 							}else{
+								workers[worker.id].totalFailedMatches++
 								workers[worker.id].lastTask = 'I was not able to match <a href="http://catalog.nypl.org/record=' + results.bnumber +'">b'+ results.bnumber  +'</a> :('
 							}
 
