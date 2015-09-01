@@ -23,6 +23,8 @@ var urlTitle = "http://classify.oclc.org/classify2/Classify?title={title}"
 
 if (cluster.isMaster) {
 
+	var updatingRecordsInMongo = false
+
 
 	setInterval(function(){
 		log.info('Work Update. total: ', count)
@@ -32,55 +34,27 @@ if (cluster.isMaster) {
 	//every 30 sec check for completed records and update the mongo datastore, get new records
 	setInterval(function(){
 
+		if (updatingRecordsInMongo) return false
+
+		updatingRecordsInMongo = true
+
+		console.log("starting record update")
 
 
-		async.eachSeries(dataStore, function(data, callback){
-
-			if (data){
-				if (data.complete && data.update){
-
-					db.updateBibRecord(data.update,function(err,results){
-
-						if (err) console.log("ERR",err)
-						//we want to remove this one from the apiClassify collection
-						db.deleteApiClassifyWork(data.update.id,function(err,results){
-
-							if (err) console.log("ERR",err)
-
-							//and delete it from the local data store
-							delete dataStore[data.update.id]
-
-							callback()
-
-						})
-
-						
-
-					})
+		db.updateClassifyData(dataStore, function(err,results){
 
 
-
-
-				}else{
-
-					callback()
-
-				}
-
+			//remove the completed records that are now updated in mongo
+			for (var x in dataStore){
+				if (dataStore[x].complete) delete dataStore[x]
 			}
 
-
-			
-
-
-
-		}, function(error){
-
+			updatingRecordsInMongo = false
 
 			console.log("done Updating, there are", Object.keys(dataStore).length, " records left in the queue to work")
 
-			//keep 50 in the queue
-			if (Object.keys(dataStore).length < 500){
+			//keep 1000 in the queue
+			if (Object.keys(dataStore).length < 1000){
 
 				console.log("Asking for more records")
 
@@ -110,11 +84,12 @@ if (cluster.isMaster) {
 
 
 
+
 		})
 
 
 
-	},10000)
+	},30000)
 
 
 
@@ -339,7 +314,7 @@ if (cluster.isMaster) {
 	var finished = false
 	var results = []
 
-	var debug = true
+	var debug = false
 	
 
 
