@@ -314,7 +314,7 @@ if (cluster.isMaster) {
 
 				var url = "http://www.worldcat.org/oclc/" + oclcNumber
 
-				request({ headers: { accept: 'text/turtle' }, encoding: "utf8",  uri: url}, function (error, response, body) {
+				request({ headers: { accept: 'text/plain' }, encoding: "utf8",  uri: url}, function (error, response, body) {
 
 					if (!error && response.statusCode == 200) {
 
@@ -329,7 +329,7 @@ if (cluster.isMaster) {
 							}
 
 							results.push(r)
-							setTimeout(callback, 100)
+							setTimeout(callback, 200)
 
 						})
 
@@ -338,7 +338,7 @@ if (cluster.isMaster) {
 					}else{
 
 						log.info("Network error:" , url  +  JSON.stringify(error) +  JSON.stringify(response.statusCode) )
-						setTimeout(callback, 100)
+						setTimeout(callback, 200)
 
 					}
 
