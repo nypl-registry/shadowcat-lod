@@ -9,5 +9,5 @@
 
   "ClassifyWorkerCount" : 10,
 
-  "WorldcatWorkerCount" : 10
+  "WorldcatWorkerCount" : 5
 }
