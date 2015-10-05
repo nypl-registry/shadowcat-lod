@@ -11,7 +11,7 @@ var log = require('simple-node-logger').createSimpleLogger(__dirname + '/../log/
 var count = 0
 var dataStore = {}
 var workers = {}
-var workerMax = config['ClassifyWorkerCount']
+var workerMax = config['WorldcatWorkerCount']
 
 
 if (cluster.isMaster) {
