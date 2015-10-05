@@ -329,7 +329,7 @@ if (cluster.isMaster) {
 							}
 
 							results.push(r)
-							callback()
+							setTimeout(callback, 100)
 
 						})
 
@@ -338,7 +338,7 @@ if (cluster.isMaster) {
 					}else{
 
 						log.info("Network error:" , url  +  JSON.stringify(error) +  JSON.stringify(response.statusCode) )
-						callback()
+						setTimeout(callback, 100)
 
 					}
 
