@@ -337,7 +337,7 @@ if (cluster.isMaster) {
 
 					}else{
 
-						log.info("Network error:" , url ,  error, response.statusCode )
+						log.info("Network error:" , url  +  JSON.stringify(error) +  JSON.stringify(response.statusCode) )
 						callback()
 
 					}
