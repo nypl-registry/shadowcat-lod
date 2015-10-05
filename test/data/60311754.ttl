@@ -1,0 +1,157 @@
+@prefix schema: <http://schema.org/> .
+@prefix genont: <http://www.w3.org/2006/gen/ont#> .
+@prefix wdrs:  <http://www.w3.org/2007/05/powder-s#> .
+@prefix umbel: <http://umbel.org/umbel#> .
+@prefix library: <http://purl.org/library/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix void:  <http://rdfs.org/ns/void#> .
+@prefix pto:   <http://www.productontology.org/id/> .
+@prefix bgn:   <http://bibliograph.net/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://experiment.worldcat.org/entity/work/data/865441178#Topic/art_et_litterature_etats_unis_histoire_20e_siecle>
+        a            schema:Intangible ;
+        schema:name  "Art et littérature--États-Unis--Histoire--20e siècle"@fr .
+
+<http://experiment.worldcat.org/entity/work/data/865441178#Place/usa>
+        a              schema:Place ;
+        schema:name    "USA." ;
+        schema:sameAs  <http://d-nb.info/gnd/4078704-7> .
+
+<http://id.worldcat.org/fast/815400>
+        a            schema:Intangible ;
+        schema:name  "Art and literature"@en .
+
+<http://id.loc.gov/authorities/subjects/sh2010102201>
+        a            schema:Intangible ;
+        schema:name  "Modernism (Art)--United States"@en .
+
+<http://experiment.worldcat.org/entity/work/data/865441178#Topic/modernisme_art_etats_unis>
+        a            schema:Intangible ;
+        schema:name  "Modernisme (Art)--États-Unis"@fr .
+
+<http://worldcat.org/isbn/9780271027029>
+        a                   schema:ProductModel , pto:Acid-free_paper ;
+        schema:description  "clothbound : alk. paper" ;
+        schema:isbn         "9780271027029" , "0271027029" .
+
+<http://experiment.worldcat.org/entity/work/data/865441178#Topic/kunst>
+        a            schema:Intangible ;
+        schema:name  "Kunst"@en .
+
+<http://viaf.org/viaf/132365684>
+        a            schema:Organization ;
+        schema:name  "Whitman College" .
+
+<http://id.loc.gov/authorities/subjects/sh2009115675>
+        a            schema:Intangible ;
+        schema:name  "Art and literature--United States--History--19th century"@en .
+
+<http://experiment.worldcat.org/entity/work/data/865441178#Event/1800_1999>
+        a            schema:Event ;
+        schema:name  "1800 - 1999" .
+
+<http://id.loc.gov/vocabulary/countries/pau>
+        a                   schema:Place ;
+        dcterms:identifier  "pau" .
+
+<http://experiment.worldcat.org/entity/work/data/865441178#Place/university_park_pa>
+        a            schema:Place ;
+        schema:name  "University Park, Pa." .
+
+<http://experiment.worldcat.org/entity/work/data/865441178#Topic/literatur>
+        a            schema:Intangible ;
+        schema:name  "Literatur"@en .
+
+<http://viaf.org/viaf/49518824>
+        a                  schema:Person ;
+        schema:familyName  "Bohan" ;
+        schema:givenName   "Ruth L." ;
+        schema:name        "Ruth L. Bohan" .
+
+<http://id.worldcat.org/fast/815447>
+        a            schema:Intangible ;
+        schema:name  "Art appreciation"@en .
+
+<http://id.loc.gov/authorities/subjects/sh2009115674>
+        a            schema:Intangible ;
+        schema:name  "Art and literature--United States--History--20th century"@en .
+
+<http://www.worldcat.org/title/-/oclc/60311754>
+        a                    genont:ContentTypeGenericResource , genont:InformationResource ;
+        void:inDataset       <http://purl.oclc.org/dataset/WorldCat> ;
+        schema:about         <http://www.worldcat.org/oclc/60311754> ;
+        schema:dateModified  "2015-06-03" .
+
+<http://experiment.worldcat.org/entity/work/data/865441178#Agent/pennsylvania_state_university_press>
+        a            bgn:Agent ;
+        schema:name  "Pennsylvania State University Press" .
+
+<http://id.worldcat.org/fast/815177>
+        a            schema:Intangible ;
+        schema:name  "Art"@en .
+
+<http://id.worldcat.org/fast/1072324>
+        a            schema:Intangible ;
+        schema:name  "Portraits"@en .
+
+<http://experiment.worldcat.org/entity/work/data/865441178#Topic/kunstwissenschaft>
+        a            schema:Intangible ;
+        schema:name  "Kunstwissenschaft"@en .
+
+<http://dewey.info/class/811.3/e22/>
+        a       schema:Intangible .
+
+<http://viaf.org/viaf/2478331>
+        a                  schema:Person ;
+        schema:birthDate   "1819" ;
+        schema:deathDate   "1892" ;
+        schema:familyName  "Whitman" ;
+        schema:givenName   "Walt" ;
+        schema:name        "Walt Whitman" , "Whitman" ;
+        schema:sameAs      <http://d-nb.info/gnd/118807153> .
+
+<http://www.worldcat.org/title/-/oclc/60311754#PublicationEvent/university_park_pa_pennsylvania_state_university_press_2006>
+        a                 schema:PublicationEvent ;
+        schema:location   <http://experiment.worldcat.org/entity/work/data/865441178#Place/university_park_pa> ;
+        schema:organizer  <http://experiment.worldcat.org/entity/work/data/865441178#Agent/pennsylvania_state_university_press> ;
+        schema:startDate  "2006" .
+
+<http://www.worldcat.org/oclc/60311754>
+        a                           schema:CreativeWork , schema:Book ;
+        library:oclcnum             "60311754" ;
+        library:placeOfPublication  <http://id.loc.gov/vocabulary/countries/pau> , <http://experiment.worldcat.org/entity/work/data/865441178#Place/university_park_pa> ;
+        schema:about                <http://id.worldcat.org/fast/1204155> , <http://id.loc.gov/authorities/subjects/sh2010102201> , <http://experiment.worldcat.org/entity/work/data/865441178#Topic/kunstwissenschaft> , <http://viaf.org/viaf/2478331> , <http://id.worldcat.org/fast/1024442> , <http://id.worldcat.org/fast/1072324> , <http://experiment.worldcat.org/entity/work/data/865441178#Topic/modernisme_art_etats_unis> , <http://experiment.worldcat.org/entity/work/data/865441178#Topic/art_et_litterature_etats_unis_histoire_19e_siecle> , <http://id.loc.gov/authorities/subjects/sh2009115674> , <http://id.loc.gov/authorities/subjects/sh2009115675> , <http://dewey.info/class/811.3/e22/> , <http://experiment.worldcat.org/entity/work/data/865441178#Topic/literatur> , <http://viaf.org/viaf/132365684> , <http://experiment.worldcat.org/entity/work/data/865441178#Place/usa> , <http://experiment.worldcat.org/entity/work/data/865441178#Topic/art_et_litterature_etats_unis_histoire_20e_siecle> , <http://experiment.worldcat.org/entity/work/data/865441178#Topic/kunst> , <http://id.worldcat.org/fast/815177> , <http://id.worldcat.org/fast/815400> , <http://id.worldcat.org/fast/815447> , <http://experiment.worldcat.org/entity/work/data/865441178#Event/1800_1999> , <http://id.worldcat.org/fast/972484> ;
+        schema:bookFormat           bgn:PrintBook ;
+        schema:creator              <http://viaf.org/viaf/49518824> ;
+        schema:datePublished        "2006" ;
+        schema:description          "Imaging Whitman: the nineteenth century. The \"gathering of the forces\" in Brooklyn -- Masks, identity, and representation -- Visual self-fashioning and artistic (re)assessment -- Reception and representation in the 1880s -- Thomas Eakins and the \"solitary singer\" -- Whitman and the modernists: the twentieth century. Marsden Hartley's masculine landscapes -- Robert Coady and The soil -- Joseph Stella's Brooklyn Bridge."@en ;
+        schema:exampleOfWork        <http://worldcat.org/entity/work/id/865441178> ;
+        schema:genre                "History"@en ;
+        schema:inLanguage           "en" ;
+        schema:name                 "Looking into Walt Whitman : American art, 1850-1920"@en ;
+        schema:numberOfPages        "261" ;
+        schema:productID            "60311754" ;
+        schema:publication          <http://www.worldcat.org/title/-/oclc/60311754#PublicationEvent/university_park_pa_pennsylvania_state_university_press_2006> ;
+        schema:publisher            <http://experiment.worldcat.org/entity/work/data/865441178#Agent/pennsylvania_state_university_press> ;
+        schema:url                  <http://tocs.kubikat.org/rco/bf00/000/bf00000359m-toc.pdf> , <http://catdir.loc.gov/catdir/toc/ecip0511/2005012194.html> , <http://bvbr.bib-bvb.de:8991/F?func=service&doc_library=BVB01&doc_number=014843424&line_number=0001&func_code=DB_RECORDS&service_type=MEDIA> , <http://digitool.hbz-nrw.de:1801/webclient/DeliveryManager?pid=3097806> , <http://digitool.hbz-nrw.de:1801/webclient/DeliveryManager?pid=3097807&custom_att_2=simple_viewer> , <http://bvbr.bib-bvb.de:8991/F?func=service&doc_library=BVB01&local_base=BVB01&doc_number=014843424&line_number=0001&func_code=DB_RECORDS&service_type=MEDIA> , <http://digitool.hbz-nrw.de:1801/webclient/DeliveryManager?pid=3097807> ;
+        schema:workExample          <http://worldcat.org/isbn/9780271027029> ;
+        umbel:isLike                <http://bnb.data.bl.uk/id/resource/GBA643512> ;
+        wdrs:describedby            <http://www.worldcat.org/title/-/oclc/60311754> .
+
+<http://id.worldcat.org/fast/1204155>
+        a            schema:Place ;
+        schema:name  "United States." .
+
+<http://id.worldcat.org/fast/1024442>
+        a            schema:Intangible ;
+        schema:name  "Modernism (Art)"@en .
+
+<http://experiment.worldcat.org/entity/work/data/865441178#Topic/art_et_litterature_etats_unis_histoire_19e_siecle>
+        a            schema:Intangible ;
+        schema:name  "Art et littérature--États-Unis--Histoire--19e siècle"@fr .
+
+<http://id.worldcat.org/fast/972484>
+        a            schema:Intangible ;
+        schema:name  "Influence (Literary, artistic, etc.)"@en .

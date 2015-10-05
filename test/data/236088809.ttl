@@ -1,0 +1,57 @@
+@prefix schema: <http://schema.org/> .
+@prefix genont: <http://www.w3.org/2006/gen/ont#> .
+@prefix wdrs:  <http://www.w3.org/2007/05/powder-s#> .
+@prefix library: <http://purl.org/library/> .
+@prefix xsd:   <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf:   <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix void:  <http://rdfs.org/ns/void#> .
+@prefix bgn:   <http://bibliograph.net/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+
+<http://viaf.org/viaf/264217913>
+        a                  schema:Person ;
+        schema:familyName  "Zaninelli" ;
+        schema:givenName   "Luigi" ;
+        schema:name        "Zaninelli, Luigi." .
+
+<http://experiment.worldcat.org/entity/work/data/66078226#Place/delaware_water_gap_pa>
+        a            schema:Place ;
+        schema:name  "Delaware Water Gap, Pa." .
+
+<http://id.worldcat.org/fast/1905309>
+        a            schema:Intangible ;
+        schema:name  "Band music--Scores." .
+
+<http://id.loc.gov/vocabulary/countries/pau>
+        a                   schema:Place ;
+        dcterms:identifier  "pau" .
+
+<http://www.worldcat.org/oclc/236088809>
+        a                           bgn:MusicScore ;
+        library:oclcnum             236088809 ;
+        library:placeOfPublication  <http://id.loc.gov/vocabulary/countries/pau> , <http://experiment.worldcat.org/entity/work/data/66078226#Place/delaware_water_gap_pa> ;
+        schema:about                <http://id.worldcat.org/fast/1905309> ;
+        schema:copyrightYear        "197" ;
+        schema:creator              <http://viaf.org/viaf/264217913> ;
+        schema:datePublished        "1979" ;
+        schema:exampleOfWork        <http://worldcat.org/entity/work/id/66078226> ;
+        schema:inLanguage           "zxx" ;
+        schema:name                 "Musica sacra" ;
+        schema:publication          <http://www.worldcat.org/title/-/oclc/236088809#PublicationEvent/delaware_water_gap_pa_shawnee_press_c_1979> ;
+        schema:publisher            <http://experiment.worldcat.org/entity/work/data/66078226#Agent/shawnee_press> ;
+        wdrs:describedby            <http://www.worldcat.org/title/-/oclc/236088809> .
+
+<http://experiment.worldcat.org/entity/work/data/66078226#Agent/shawnee_press>
+        a            bgn:Agent ;
+        schema:name  "Shawnee Press" .
+
+<http://www.worldcat.org/title/-/oclc/236088809#PublicationEvent/delaware_water_gap_pa_shawnee_press_c_1979>
+        a                 schema:PublicationEvent ;
+        schema:location   <http://experiment.worldcat.org/entity/work/data/66078226#Place/delaware_water_gap_pa> ;
+        schema:organizer  <http://experiment.worldcat.org/entity/work/data/66078226#Agent/shawnee_press> ;
+        schema:startDate  "c 1979" .
+
+<http://www.worldcat.org/title/-/oclc/236088809>
+        a               genont:ContentTypeGenericResource , genont:InformationResource ;
+        void:inDataset  <http://purl.oclc.org/dataset/WorldCat> ;
+        schema:about    <http://www.worldcat.org/oclc/236088809> .

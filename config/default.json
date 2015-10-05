@@ -7,5 +7,7 @@
 
   },
 
-  "ClassifyWorkerCount" : 10
+  "ClassifyWorkerCount" : 10,
+
+  "WorldcatWorkerCount" : 10
 }

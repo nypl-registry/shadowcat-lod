@@ -1,0 +1,77 @@
+@prefix schema: <http://schema.org/> .
+@prefix genont: <http://www.w3.org/2006/gen/ont#> .
+@prefix rdfs:  <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix wdrs:  <http://www.w3.org/2007/05/powder-s#> .
+@prefix library: <http://purl.dnSeries ;
+        schema:hasPart  <http://www.worldcat.org/oclc/411620> ;
+        schema:name     "An Abrams art book" .
+
+<http://dewey.info/class/759.9492/>
+        a       schema:Intangible .
+
+<http://experiment.worldcat.org/entity/work/data/1813362258#Agent/h_n_abrams>
+        a            bgn:Agent ;
+        schema:name  "H.N. Abrams" .
+
+<http://www.worldcat.org/oclc/741878640>
+        a                   schema:CreativeWork ;
+        rdfs:label          "Van Gogh." ;
+        schema:description  "Online version:" ;
+        schema:isSimilarTo  <http://www.worldcat.org/oclc/411620> .
+
+<http://www.worldcat.org/oclc/411620>
+        a                           schema:Book , schema:CreativeWork ;
+        library:oclcnum             "411620" ;
+        library:placeOfPublication  <http://id.loc.gov/vocabulary/countries/nyu> , <http://dbpedia.org/resource/New_York_City> ;
+        schema:about                <http://viaf.org/viaf/9854560> , <http://id.loc.gov/authorities/classification/ND653> , <http://experiment.worldcat.org/entity/work/data/1813362258#Person/gogh_vincent_van_1853_1890> , <http://dewey.info/class/759.9492/> ;
+        schema:bookFormat           bgn:PrintBook ;
+        schema:contributor          <http://viaf.org/viaf/5009565> ;
+        schema:creator             f11620" ;
+        schema:publication          <http://www.worldcat.org/title/-/oclc/411620#PublicationEvent/new_york_h_n_abrams_1952> ;
+        schema:publisher            <http://experiment.worldcat.org/entity/work/data/1813362258#Agent/h_n_abrams> ;
+        wdrs:describedby            <http://www.worldcat.org/title/-/oclc/411620> .
+
+<http://viaf.org/viaf/5009565>
+        a                  schema:Person ;
+        schema:birthDate   "1904" ;
+        schema:deathDate   "1996" ;
+        schema:familyName  "Schapiro" ;
+        schema:givenName   "Meyer" ;
+        schema:name        "Meyer Schapiro" .
+
+<http://www.worldcat.org/title/-/oclc/411620#PublicationEvent/new_york_h_n_abrams_1952>
+        a                 schema:PublicationEvent ;
+        schema:location   <http://dbpedia.org/resource/New_York_City> ;
+        schema:organizer  <http://experiment.worldcat.org/entity/work/data/1813362258#Agent/h_n_abrams> ;
+        schema:startDate  "1952" .;
+        a            schema:Place ;
+        schema:name  "New York" .
+
+<http://id.loc.gov/authorities/classification/ND653>
+        a       schema:Intangible .
+
+<http://experiment.worldcat.org/entity/work/data/1813362258#Person/gogh_vincent_van_1853_1890>
+        a                  schema:Person ;
+        schema:birthDate   "1853" ;
+        schema:deathDate   "1890" ;
+        schema:familyName  "Gogh" ;
+        schema:givenName   "Vincent van" ;
+        schema:name        "Vincent van Gogh" .
+
+<http://viaf.org/viaf/9854560>
+        a                  schema:Person ;
+        schema:birthDate   "1853" ;
+        schema:deathDate   "1890" ;
+        schema:familyName  "Gogh" ;
+        schema:givenName   "Vincent van" ;
+        schema:name        "Vincent van Gogh" .
+
+<http://www.worldcat.org/title/-/oclc/411620>
+        a                    genont:ContentTypeGenericResource , genont:InformationResource ;
+        void:inDataset       <http://purl.oclc.org/dataset/WorldCat> ;
+        schema:about         <http://www.worldcat.org/oclc/411620> ;
+        schema:dateModified  "2015-09-24" .
+
+<http://id.loc.gov/vocabulary/countries/nyu>
+        a                   schema:Place ;
+        dcterms:identifier  "nyu" .
