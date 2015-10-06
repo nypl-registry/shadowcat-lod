@@ -334,7 +334,7 @@ if (cluster.isMaster) {
 						})
 
 
-					}else if (response.statusCode == 403) {
+					}else if (response.statusCode == 403 || response.statusCode == 500) {
 
 						//try it again after waiting a few
 						setTimeout(function(){
