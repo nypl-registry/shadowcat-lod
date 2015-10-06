@@ -334,6 +334,43 @@ if (cluster.isMaster) {
 						})
 
 
+					}else if (response.statusCode == 403) {
+
+						//try it again after waiting a few
+						setTimeout(function(){
+
+							request({ headers: { accept: 'text/plain' }, encoding: "utf8",  uri: url}, function (error, response, body) {
+
+								if (!error && response.statusCode == 200) {
+
+									activeRecord.totalRequests++
+									activeRecord.totalBytes = activeRecord.totalBytes + Buffer.byteLength(body, 'utf8')
+
+									//process the results
+									worldcatDecode.returnData(oclcNumber,body,function(err,r){
+
+										if (err){
+											log.info("Decode ERROR:",url)
+										}
+
+										results.push(r)
+										setTimeout(callback, 200)
+
+									})
+
+								}else{
+
+									log.info("Network error:" , url  +  JSON.stringify(error) +  JSON.stringify(response.statusCode) )
+									setTimeout(callback, 200)
+
+								}
+
+							})
+
+
+						},750)
+
+
 
 					}else{
 
