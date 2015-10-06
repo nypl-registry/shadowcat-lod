@@ -350,7 +350,7 @@ if (cluster.isMaster) {
 									worldcatDecode.returnData(oclcNumber,body,function(err,r){
 
 										if (err){
-											log.info("Decode ERROR:",url + body)
+											log.info("Decode ERROR:",url + body.length)
 										}
 
 										results.push(r)
