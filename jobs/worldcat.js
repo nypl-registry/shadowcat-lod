@@ -241,7 +241,7 @@ if (cluster.isMaster) {
 				});
 
 
-			}, Math.floor(Math.random() * (1000 - 0))   )
+			}, Math.floor(Math.random() * (10000 - 0))   )
 
 		}
 
@@ -325,7 +325,7 @@ if (cluster.isMaster) {
 						worldcatDecode.returnData(oclcNumber,body,function(err,r){
 
 							if (err){
-								log.info("Decode ERROR:",url + body.length + body)
+								log.info("Decode ERROR:",url + " | " + body.length)
 							}
 
 							results.push(r)
@@ -350,7 +350,7 @@ if (cluster.isMaster) {
 									worldcatDecode.returnData(oclcNumber,body,function(err,r){
 
 										if (err){
-											log.info("Decode ERROR:",url + body.length + body)
+											log.info("Decode ERROR:",url + " | " + body.length)
 										}
 
 										results.push(r)
