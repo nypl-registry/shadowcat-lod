@@ -424,13 +424,12 @@ if (cluster.isMaster) {
 					//this is setup to do multiple seriealizations if one fails, but the n-triple is pretty stable
 					//not worth the extra bandwith time to try the others
 					if (requestDecodeResults===false){
-
 						log.info("No data found for:",oclcNumber)
-
 					}else{
-						results.push(requestDecodeResults)
-						callback()
+						results.push(requestDecodeResults)						
 					}
+
+					callback()
 
 					// if (requestDecodeResults===false){
 						
