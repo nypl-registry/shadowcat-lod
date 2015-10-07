@@ -13,7 +13,6 @@ var dataStore = {}
 var workers = {}
 var workerMax = config['WorldcatWorkerCount']
 
-
 if (cluster.isMaster) {
 
 	var updatingRecordsInMongo = false
@@ -283,6 +282,102 @@ if (cluster.isMaster) {
 	
 
 
+	var requestDecode = function(oclcNumber,contentType,cb){
+
+		//'text/plain' 
+
+
+		var url = "http://www.worldcat.org/oclc/" + oclcNumber
+
+		request({ headers: { accept: contentType }, encoding: "utf8",  uri: url}, function (error, response, body) {
+
+			if (!error && response.statusCode == 200) {
+
+				activeRecord.totalRequests++
+				activeRecord.totalBytes = activeRecord.totalBytes + Buffer.byteLength(body, 'utf8')
+
+				//process the results
+				worldcatDecode.returnData(oclcNumber,body,function(err,parseReults1){
+
+					// if (err){
+					// 	console.log("Decode ERROR:",url + " | " + contentType)
+					// 	console.log(err)
+					// 	console.log("-------------")
+					// 	console.log(parseReults1)
+					// 	console.log("-------------")
+						
+					// }
+
+					
+
+					//if there was parse error it doesn't really matter, it likely got a lot of the data out of it
+					cb(parseReults1)
+
+				})
+
+
+			}else if (response.statusCode == 403 || response.statusCode == 500) {
+
+				//try it again after waiting a few
+				setTimeout(function(){
+
+					request({ headers: { accept: contentType }, encoding: "utf8",  uri: url}, function (error, response, body) {
+
+						if (!error && response.statusCode == 200) {
+
+							activeRecord.totalRequests++
+							activeRecord.totalBytes = activeRecord.totalBytes + Buffer.byteLength(body, 'utf8')
+
+							//process the results
+							worldcatDecode.returnData(oclcNumber,body,function(err,parseReults2){
+
+								// if (err){
+								// 	console.log("Network Error retry Decode ERROR:",url + " | " + contentType)
+								// 	console.log(err)
+								// 	console.log("-------------")
+								// 	console.log(parseReults2)
+								// 	console.log("-------------")									
+								// }
+
+								
+								//if there was parse error it doesn't really matter, it likely got a lot of the data out of it
+								cb(parseReults2)
+
+							})
+
+						}else{
+
+							log.info("Second Network error:" , url  +  JSON.stringify(error) +  JSON.stringify(response.statusCode) )
+							
+							cb(false)
+
+
+
+						}
+
+					})
+
+
+				},750)
+
+
+
+			}else{
+
+				log.info("Network error:" , url  +  JSON.stringify(error) +  JSON.stringify(response.statusCode) )
+				//setTimeout(function(){
+					cb(false)
+				//}, 200)
+
+			}
+
+		})
+
+	}
+
+
+
+
 	var processRecord = function(msg) {
 
 
@@ -309,78 +404,54 @@ if (cluster.isMaster) {
 			results = []
 
 
-
 			async.eachSeries(activeRecord.oclc, function(oclcNumber, callback){
 
-				var url = "http://www.worldcat.org/oclc/" + oclcNumber
+				//first try n triples
+				requestDecode(oclcNumber, 'text/plain', function(requestDecodeResults){
 
-				request({ headers: { accept: 'text/plain' }, encoding: "utf8",  uri: url}, function (error, response, body) {
+					//this is setup to do multiple seriealizations if one fails, but the n-triple is pretty stable
+					//not worth the extra bandwith time to try the others
+					if (requestDecodeResults===false){
 
-					if (!error && response.statusCode == 200) {
-
-						activeRecord.totalRequests++
-						activeRecord.totalBytes = activeRecord.totalBytes + Buffer.byteLength(body, 'utf8')
-
-						//process the results
-						worldcatDecode.returnData(oclcNumber,body,function(err,r){
-
-							if (err){
-								log.info("Decode ERROR:",url + " | " + body.length)
-							}
-
-							results.push(r)
-							setTimeout(callback, 200)
-
-						})
-
-
-					}else if (response.statusCode == 403 || response.statusCode == 500) {
-
-						//try it again after waiting a few
-						setTimeout(function(){
-
-							request({ headers: { accept: 'text/plain' }, encoding: "utf8",  uri: url}, function (error, response, body) {
-
-								if (!error && response.statusCode == 200) {
-
-									activeRecord.totalRequests++
-									activeRecord.totalBytes = activeRecord.totalBytes + Buffer.byteLength(body, 'utf8')
-
-									//process the results
-									worldcatDecode.returnData(oclcNumber,body,function(err,r){
-
-										if (err){
-											log.info("Decode ERROR:",url + " | " + body.length)
-										}
-
-										results.push(r)
-										setTimeout(callback, 200)
-
-									})
-
-								}else{
-
-									log.info("Network error:" , url  +  JSON.stringify(error) +  JSON.stringify(response.statusCode) )
-									setTimeout(callback, 200)
-
-								}
-
-							})
-
-
-						},750)
-
-
+						log.info("No data found for:",oclcNumber)
 
 					}else{
-
-						log.info("Network error:" , url  +  JSON.stringify(error) +  JSON.stringify(response.statusCode) )
-						setTimeout(callback, 200)
-
+						results.push(requestDecodeResults)
+						callback()
 					}
+
+					// if (requestDecodeResults===false){
+						
+					// 	//try turtle
+					// 	requestDecode(oclcNumber, 'text/turtle', function(requestDecodeResults){
+
+					// 		if (requestDecodeResults===false){
+
+					// 			//try turtle
+					// 			requestDecode(oclcNumber, 'application/ld+json', function(requestDecodeResults){
+
+					// 				if (requestDecodeResults===false){
+					// 					//other options? TODO
+					// 				}else{
+					// 					results.push(requestDecodeResults)										
+					// 				}
+
+					// 				callback()
+					// 			})
+					// 		}else{
+					// 			results.push(requestDecodeResults)
+					// 			callback()
+					// 		}
+					// 	})
+					// }else{
+					// 	results.push(requestDecodeResults)
+					// 	callback()
+					// }
 
 
 				})
+
+
 
 
 			}, function(error){
@@ -392,6 +463,8 @@ if (cluster.isMaster) {
 				var creator = []
 				var datePublished = []
 				var genre = []
+
+
 
 
 				var finalUpdate ={
@@ -462,200 +535,35 @@ if (cluster.isMaster) {
 					for (var z in aResult.datePublished){
 						var r = aResult.datePublished[z]
 						if (datePublished.indexOf(r) == -1){
-							finalUpdate.datePublished.push(  r )
-							datePublished.push(r)
+
+							if (r.trim() != ''){
+								finalUpdate.datePublished.push(  r )
+								datePublished.push(r)
+							}
 						}
 
 					}
 					for (var z in aResult.genre){
 						var r = aResult.genre[z]
 						if (genre.indexOf(r) == -1){
-							finalUpdate.genre.push(  r )
-							genre.push(r)
+							if (r.trim() != ''){
+								finalUpdate.genre.push(  r )
+								genre.push(r)
+							}
 						}
 
 					}
 				}
 
-
+				// if (finalUpdate.aboutFast.length == 0 && finalUpdate.aboutLcsh.length == 0 && finalUpdate.aboutViaf.length == 0 && finalUpdate.contributor.length == 0 && finalUpdate.creator.length == 0 && finalUpdate.datePublished.length == 0 && finalUpdate.genre.length == 0 ){
+				// 	console.log("No Results!",activeRecord.oclc, activeRecord._id)
+				// 	console.log(results)
+				// }
 
 				process.send({ req: {results: finalUpdate, record: activeRecord,  id: cluster.worker.id} });
 
 
 			})
-
-
-
-
-			// if (activeRecord.oclc.length>0){
-
-			// 	//we want to grab all the oclc responses and end if we have any non zero responses
-
-			// 	async.eachSeries(activeRecord.oclc, function(oclcNumber, callback){
-			// 		var url = urlOclc.replace('{ID}',oclcNumber)
-			// 		if (debug) console.log(url)
-			// 		request({ encoding: "utf8",  uri: url}, function (error, response, body) {
-
-			// 			if (!error && response.statusCode == 200) {
-
-			// 				activeRecord.totalRequests++
-			// 				activeRecord.totalBytes = activeRecord.totalBytes + Buffer.byteLength(body, 'utf8')
-
-			// 				//did we get a hit?
-			// 				if (body.search('<response code="2"')>-1) foundSomething = true
-			// 				results.push(body)
-			// 			}else{
-			// 				if (debug) console.log("Request ERROR:",response.statusCode,error)
-			// 			}
-
-			// 			callback()
-
-			// 		})
-
-
-
-			// 	}, function(error){
-
-
-			// 		if (!foundSomething){
-
-
-			// 			// we did not get a single match on the oclc numbers try isbn and then issn
-
-
-			// 			async.eachSeries(activeRecord.isbn, function(isbnNumber, callback){
-			// 				var url = urlIsbn.replace('{ID}',isbnNumber)
-			// 				if (debug) console.log(url)
-			// 				request({ encoding: "utf8",  uri: url}, function (error, response, body) {
-
-			// 					if (!error && response.statusCode == 200) {
-
-			// 						activeRecord.totalRequests++
-			// 						activeRecord.totalBytes = activeRecord.totalBytes + Buffer.byteLength(body, 'utf8')
-
-			// 						//did we get a hit?
-			// 						if (body.search('<response code="2"')>-1) foundSomething = true
-			// 						results.push(body)
-			// 					}else{
-			// 						if (debug) console.log("Request ERROR:",response.statusCode,error)
-			// 					}
-
-			// 					callback()
-
-			// 				})
-
-
-
-			// 			}, function(error){
-
-
-			// 				async.eachSeries(activeRecord.issn, function(issnNumber, callback){
-			// 					var url = urlIssn.replace('{ID}',issnNumber)
-			// 					if (debug) console.log(url)
-			// 					request({ encoding: "utf8",  uri: url}, function (error, response, body) {
-
-			// 						if (!error && response.statusCode == 200) {
-
-			// 							activeRecord.totalRequests++
-			// 							activeRecord.totalBytes = activeRecord.totalBytes + Buffer.byteLength(body, 'utf8')
-
-			// 							//did we get a hit?
-			// 							if (body.search('<response code="2"')>-1) foundSomething = true
-			// 							results.push(body)
-			// 						}else{
-			// 							if (debug) console.log("Request ERROR:",response.statusCode,error)
-			// 						}
-
-			// 						callback()
-
-			// 					})
-
-
-
-			// 				}, function(error){
-
-			// 					//if we did not find something after all of that then try the title and author
-			// 					if (!foundSomething){
-
-
-			// 						if (activeRecord.title && activeRecord.author){
-			// 							var url = urlTitleAuthor.replace('{title}',encodeURIComponent(activeRecord.title)).replace('{author}',encodeURIComponent(activeRecord.author))
-			// 						}else{
-			// 							var url = urlTitle.replace('{title}',encodeURIComponent(activeRecord.title) )
-			// 						}
-
-			// 						request({ encoding: "utf8",  uri: url}, function (error, response, body) {
-
-			// 							if (!error && response.statusCode == 200) {
-
-			// 								activeRecord.totalRequests++
-			// 								activeRecord.totalBytes = activeRecord.totalBytes + Buffer.byteLength(body, 'utf8')											
-			// 								//did we get a hit?
-			// 								if (body.search('<response code="2"')>-1) foundSomething = true
-
-			// 								results.push(body)
-			// 							}else{
-			// 								if (debug) console.log("Request ERROR:",response.statusCode,error)
-			// 							}
-
-			// 							//did we find nothing, try just the title
-			// 							if (activeRecord.author && foundSomething == false){
-
-			// 								var url = urlTitle.replace('{title}',encodeURIComponent(activeRecord.title) )
-			// 								request({ encoding: "utf8",  uri: url}, function (error, response, body) {
-
-			// 									activeRecord.totalRequests++
-			// 									activeRecord.totalBytes = activeRecord.totalBytes + Buffer.byteLength(body, 'utf8')
-
-
-			// 									if (!error && response.statusCode == 200) {
-			// 										//did we get a hit?
-			// 										if (body.search('<response code="2"')>-1) foundSomething = true
-
-			// 										results.push(body)
-			// 									}else{
-			// 										if (debug) console.log("Request ERROR:",response.statusCode,error)
-			// 									}
-
-			// 									finished = true
-
-			// 								})
-
-
-
-			// 							}else{
-			// 								finished = true
-			// 							}
-
-
-
-			// 						})
-
-
-			// 					}else{
-
-			// 						finished = true
-
-			// 					}
-
-			// 				})
-
-			// 			})
-
-
-			// 		}else{
-
-			// 			//we are good
-			// 			finished = true
-
-			// 		}
-
-			// 	})
-
-
-
-			// }
-
 
 		}
 
@@ -665,127 +573,6 @@ if (cluster.isMaster) {
 
 
 	process.on('message', processRecord)
-
-
-	///Infant-baptisme justified by a nevv discovery [electronic resource] : and also, several scripture allegories adjusted upon the like account. By William Parker clerk, incumbent of Wrotham in Kent.
-
-
-	// setInterval(function(){
-
-	// 	if (activeRecord){
-
-	// 		//if (debug) console.log(cluster.worker.id, "Asking for work")
-	// 		//if (debug) console.log(cluster.worker.id, "Working:",activeRecord.bnumber)
-	// 		//if (debug) console.log("finished:",finished,"resultsLength:",results.length)
-
-	// 		if (finished){
-
-	// 			var finalRecord = JSON.parse(JSON.stringify(activeRecord))
-
-
-
-	// 			activeRecord = false
-
-	// 			//we want to write our results out to the file system and get the next work
-
-	// 			finalRecord.foundSomething = foundSomething
-	// 			finalRecord.resultsLength = results.length
-	// 			finalRecord.results = results
-
-
-	// 			//write
-	// 			// var tmp = fs.createWriteStream(pathToCatalogClassifyResults + activeRecord.bnumber + '.json',{'flags': 'w'})
-	// 			// tmp.end(JSON.stringify(activeRecord))
-
-	// 			// tmp.on("finish",function(){
-
-	// 			// 	process.send({ req: {complete: activeRecord, id: cluster.worker.id} });
-	// 			// 	activeRecord = false
-	// 			// 	if (debug) console.log("WROTE")
-
-	// 			// })
-
-	// 			classifyDecode.returnData(finalRecord,function(decodeResults){
-
-
-	// 				//console.log("----------------------")
-	// 				//console.log(decodeResults)
-					
-
-	// 				if (decodeResults.addOclcNumberOnly && (finalRecord.title != false && finalRecord.author != false) ){
-
-
-	// 					//we want to do it again with just the OCLC number this time to grab that full record since the title match doesn't have everything we need
-						
-	// 					var msg = {}
-	// 					msg.req = {}
-
-	// 					msg.req.record 	= {
-	// 						_id: finalRecord._id,
-	// 						oclc : [decodeResults.data],
-	// 						isbn : [],
-	// 						issn : [],
-	// 						title : false,
-	// 						author : false
-	// 					}
-
-	// 					//process it again with this new record
-	// 					processRecord(msg)
-
-
-	// 				}else{
-
-
-	// 					process.send({ req: {results: decodeResults, record: finalRecord,  id: cluster.worker.id} });
-
-	// 				}
-
-
-
-					
-
-	// 			});
-
-				
-
-
-
-
-
-
-
-	// 		}
-
-
-	// 	}
-
-	// },Math.floor(Math.random() * (2000 - 500)))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 	//first request
