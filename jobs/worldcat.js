@@ -277,9 +277,19 @@ if (cluster.isMaster) {
 	var foundSomething = false
 	var finished = false
 	var results = []
+	var internalCounter = 0, internalCounterLast = 0
 
 	var debug = false
 	
+
+	setInterval(function(){			
+		if (internalCounter === internalCounterLast){
+			console.log("Worker #" + cluster.worker.id + " I havent done anything in 30 seconds, quiting")
+			process.exit(0)
+		}else{
+			internalCounterLast = internalCounter
+		}
+	},30000)
 
 
 	var requestDecode = function(oclcNumber,contentType,cb){
@@ -409,6 +419,8 @@ if (cluster.isMaster) {
 				//first try n triples
 				requestDecode(oclcNumber, 'text/plain', function(requestDecodeResults){
 
+
+					internalCounter++
 					//this is setup to do multiple seriealizations if one fails, but the n-triple is pretty stable
 					//not worth the extra bandwith time to try the others
 					if (requestDecodeResults===false){
