@@ -24,6 +24,7 @@ var urlTitle = "http://classify.oclc.org/classify2/Classify?title={title}"
 if (cluster.isMaster) {
 
 	var updatingRecordsInMongo = false
+	var totalDone = 0
 
 
 	setInterval(function(){
@@ -159,7 +160,12 @@ if (cluster.isMaster) {
 							//completed one
 							//console.log("Worker#", msg.req.id, " completed ", msg.req.record._id)
 
-							
+
+							process.stdout.clearLine()
+							process.stdout.cursorTo(0)
+							process.stdout.write( "Completed: | " + (++totalDone) )
+
+												
 							dataStore[msg.req.record._id].results = msg.req.results
 
 							workers[worker.id].totalRequests = workers[worker.id].totalRequests + msg.req.record.totalRequests
@@ -321,8 +327,21 @@ if (cluster.isMaster) {
 	var foundSomething = false
 	var finished = false
 	var results = []
+	var internalCounter = 0, internalCounterLast = 0
 
 	var debug = false
+
+
+	setInterval(function(){			
+		if (internalCounter === internalCounterLast){
+			console.log("Worker #" + cluster.worker.id + " I havent done anything in 30 seconds, quiting")
+			process.exit(0)
+		}else{
+			internalCounterLast = internalCounter
+		}
+	},30000)
+
+
 	
 
 
@@ -340,6 +359,8 @@ if (cluster.isMaster) {
 
 
 		if (msg.req.record){
+
+
 
 			//console.log("Working on", msg.req.record._id)
 
@@ -720,30 +741,6 @@ if (cluster.isMaster) {
 
 
 			}
-
-
-
-
-
-
-
-
-
-
-			// setTimeout(function(){
-
-
-
-
-
-
-
-
-			// 	process.send({ req: {results: activeRecord, id: cluster.worker.id} })
-
-
-			// },1000)
-
 		}
 
 	}
@@ -768,6 +765,8 @@ if (cluster.isMaster) {
 			//if (debug) console.log("finished:",finished,"resultsLength:",results.length)
 
 			if (finished){
+
+				internalCounter++
 
 				var finalRecord = JSON.parse(JSON.stringify(activeRecord))
 
@@ -852,119 +851,9 @@ if (cluster.isMaster) {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	//first request
 	process.send({ req: {complete: activeRecord, id: cluster.worker.id} })
 
 
 
 }	
-
-
-
-
-
-
-// var work = function(cb){
-
-
-
-// 	db.returnNextApiLccnWork(function(err,doc){
-
-// 		if (err) console.log(err)
-
-
-// 		if (doc) doc = doc[0]
-
-
-// 		log.info(doc['_id']," Started working on.")
-
-
-
-// 		setTimeout(function(){
-
-
-// 			apiLccn.returnLccnMarcXml(doc['lccn'],function(xml){
-
-
-// 				apiLccn.parseMarcXml(xml,function(results){
-
-// 					log.info(doc['_id'],results)
-
-// 					var updateRecord = {
-// 						id: doc['_id']
-// 					}
-
-
-// 					if (results.dewey) updateRecord['lc:dcc'] = results.dewey
-// 					if (results.lcc) updateRecord['lc:lcc'] = results.lcc
-// 					if (results.oclc) updateRecord['lc:oclc'] = results.oclc
-
-// 					count++
-// 					if (updateRecord['lc:dcc']) addedDewey++
-// 					if (updateRecord['lc:lcc']) addedLcc++
-// 					if (updateRecord['lc:oclc']) addedOclc++
-
-
-
-// 					db.updateBibRecord(updateRecord,function(err,r){
-
-// 						//we want to delete this record from the work table so the next work call gets the next one in line to work
-// 						db.deleteApiLccnWork(doc['_id'],function(err,results){
-// 							if (err) log.info(doc['_id']," Error:",err)
-// 							work()
-// 						})
-
-
-// 					})
-
-
-
-
-// 				});
-
-
-
-
-// 			})
-
-
-
-
-
-// 		},5000)
-
-
-
-// 	})
-
-
-
-
-// }
-
-// work()
