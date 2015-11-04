@@ -128,6 +128,19 @@ if (cluster.isMaster) {
 
 				var worker = cluster.fork();
 
+				
+				//make sure they restart if they hit a bad record
+				worker.on('exit', function(worker, code, signal) {
+
+					if (workers[worker.process.pid]){
+						workers[worker.process.pid].lastTask = "I died :( | Error: " +   code + ' | ' + signal
+					}
+
+
+					cluster.fork();
+				});
+				
+
 				//console.log(worker)
 
 				log.info('Spawing worker:',worker.id)
@@ -293,16 +306,7 @@ if (cluster.isMaster) {
 		}
 
 
-		//make sure they restart if they hit a bad record
-		cluster.on('exit', function(worker, code, signal) {
 
-			if (workers[worker.process.pid]){
-				workers[worker.process.pid].lastTask = "I died :( | Error: " +   code + ' | ' + signal
-			}
-
-
-			cluster.fork();
-		});
 
 
 
@@ -334,12 +338,12 @@ if (cluster.isMaster) {
 
 	setInterval(function(){			
 		if (internalCounter === internalCounterLast){
-			console.log("Worker #" + cluster.worker.id + " I havent done anything in 30 seconds, quiting")
+			console.log("Worker #" + cluster.worker.id + " I havent done anything in 5min, quiting")
 			process.exit(0)
 		}else{
 			internalCounterLast = internalCounter
 		}
-	},30000)
+	},300000)
 
 
 	
