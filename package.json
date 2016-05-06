@@ -24,7 +24,7 @@
   "scripts": {
     "test": "mocha test"
   },
-  "description": "",
+  "description": "shadowcat lod",
   "license": "MIT",
   "name": "shadowcat-lod",
   "preferGlobal": false,
