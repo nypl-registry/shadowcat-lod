@@ -1,6 +1,6 @@
 {
   "DB": {
-    "mongoConnectURL" : "mongodb://127.0.0.1:27017/test",
+    "mongoConnectURL" : "mongodb://127.0.0.1/test",
     "mongoIp" : "127.0.0.1",
     "mongoPort" : 27017,
     "mongoDb" : "test"
